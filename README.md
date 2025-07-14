@@ -1,31 +1,38 @@
-# DevOps Course project
+# Notes App - Deployment Guide
 
-This is a playground project consisting of a frontend (React) and a backend (Node.js/Express) apps for deployment training.
-
----
-
-## 🚀 Getting Started
-
-### 🔧 Prerequisites
-
-Make sure you have the following installed:
-
-- [Node.js](https://nodejs.org/)
-- npm (comes with Node.js)
+This project includes a backend (Node.js + Express) and a frontend (React), both dockerized and deployed using Docker Compose.
 
 ---
 
-## 📦 Install & Run
+## Requirements
 
-### ▶️ Frontend
-```bash
-cd frontend
-npm install
-npm start
-```
-### ▶️ Backend
-```bash
-cd backend
-npm install
-node index.js
-```
+- A Linux VM (I used ubuntu)
+- Docker installed
+- Docker Compose installed
+- Ports 80 (frontend) and 5000 (backend) open on the VM firewall/security group
+
+---
+
+## How to Run the App on Your VM
+
+1. SSH into your VM.
+
+2. Clone this repository or copy the project files to the VM.
+
+3. Navigate to the project root folder (where `docker-compose.yml` is located).
+
+4. Run the following command to build and start both backend and frontend containers:
+
+   ```cmd
+   docker-compose up --build -d
+
+## Screenshots
+
+### Notes app running in browser
+
+![Notes app UI](images/app-ui.png)
+
+### Docker containers running on VM
+
+![Docker ps output](images/docker-ps.png)
+
