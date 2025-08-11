@@ -1,77 +1,71 @@
-# Notes App - Deployment Guide
+Notes App – Deployment Guide
+This project includes a backend (Node.js + Express) and a frontend (React), both dockerized and managed with Docker Compose.
+The app is built and deployed automatically via a CI/CD pipeline in GitHub Actions.
 
-This project includes a backend (Node.js + Express) and a frontend (React), both dockerized and deployed using Docker Compose.
+Requirements
+A Linux server (e.g., Ubuntu) with SSH access
 
----
+Docker installed
 
-## Requirements
+Docker Compose installed
 
-- A Linux VM (I used ubuntu)
-- Docker installed
-- Docker Compose installed
-- Ports 80 (frontend) and 5000 (backend) open on the VM firewall/security group
+Firewall/Security Group rules allowing:
 
----
+Port 80 – frontend
 
-## How to Run the App on Your VM
+Port 5000 – backend
 
-1. SSH into your VM.
+How Deployment Works
+Deployment is fully automated through GitHub Actions:
 
-2. Clone this repository or copy the project files to the VM.
+CI Stage (Build & Push)
 
-3. Navigate to the project root folder (where `docker-compose.yml` is located).
+Check out the code
 
-4. Run the following command to build and start both backend and frontend containers:
+Install dependencies (npm install)
 
-   ```cmd
-   docker-compose up --build -d
-   ```
+Build the frontend
 
-## Screenshots
+Create Docker images for frontend and backend
 
-### Notes app running in browser
+Push images to Docker Hub (shirelchaulker/{frontend|backend})
 
-![Notes app UI](images/app-ui.png)
+CD Stage (Deploy)
 
-### Docker containers running on VM
+Connect to the VM via SSH
 
-![Docker ps output](images/docker-ps.png)
+Run docker-compose pull to fetch the latest images from Docker Hub
 
-### CI/CD Pipeline
+Restart containers using docker-compose up -d --remove-orphans
 
-## Overview
+Running the App on the VM
+You do not build the app locally on the VM.
+The CI workflow handles the build process and uploads the images to Docker Hub.
 
-This GitHub Actions workflow automates the build, test, and deployment process for the frontend and backend apps on every push to the main branch.
+On the VM, make sure:
 
-CI:
+You have a project folder containing the correct docker-compose.yml
 
-Checks out code
+You run:
 
-Installs dependencies (npm ci)
+bash
+Copy
+Edit
+docker-compose pull
+docker-compose up -d --remove-orphans
+CI/CD Pipeline Overview
+Trigger: Runs automatically on every push to the main branch
 
-Builds the apps (npm run build)
+CI: Builds and pushes Docker images
 
-Builds and pushes Docker images to Docker Hub
+CD: Pulls updated images on the VM and restarts containers
 
-CD:
+Prerequisites
+Before the workflow can run successfully:
 
-Connects to your VM via SSH
+On the VM: Docker + Docker Compose installed
 
-Pulls the latest Docker images
-
-Runs containers with docker compose up -d --remove-orphans
-
-## Triggers
-
-Runs automatically on every push to the main branch.
-
-## Prerequisites
-
-Docker and Docker Compose installed on your VM
-
-Proper docker-compose.yml file on your VM
-
-GitHub secrets set:
+On GitHub: The following repository secrets set:
 
 DOCKER_USERNAME
 
@@ -83,10 +77,12 @@ VM_USER
 
 VM_SSH_KEY (private SSH key)
 
-## How to Use
+## Screenshots
 
-Push changes to the main branch.
+### Notes app running in browser
 
-Monitor the workflow in the Actions tab on GitHub.
+![Notes app UI](images/app-ui.png)
 
-After completion, your VM will run the updated containers.
+### Docker containers running on VM
+
+![Docker ps output](images/docker-ps.png)
